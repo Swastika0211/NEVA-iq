@@ -1,5 +1,8 @@
 # ⚡ NEV Intelligence Platform  
 ### AI-Powered EV Assembly & Sustainability Analysis  
+Deployed on Netlify
+Analysis-http://iridescent-cocada-dc9702.netlify.app
+Solution-http://rad-arithmetic-1edcfe.netlify.app
 
 ---
 
