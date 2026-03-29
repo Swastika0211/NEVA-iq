@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEV Sustainability Impact Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060a0f;
+  --bg2: #0b1018;
+  --bg3: #101820;
+  --card: #0d1520;
+  --border: #162236;
+  --accent: #00e5b4;
+  --gold: #f0c040;
+  --red: #ff4f4f;
+  --blue: #3db4ff;
+  --muted: #5a7a99;
+  --text: #d8eaf5;
+  --india: #ff9933;
+  --green: #39d98a;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before {
+  content:'';
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 10%, rgba(0,229,180,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 85%, rgba(61,180,255,0.04) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+.wrap { position:relative; z-index:1; max-width:1380px; margin:0 auto; padding:0 28px 80px; }
+
+/* ─── HEADER ─── */
+header {
+  padding: 48px 0 32px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 48px;
+}
+.htag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--accent);
+  letter-spacing: 4px; text-transform:uppercase;
+  margin-bottom: 16px; display:flex; align-items:center; gap:12px;
+}
+.htag::before { content:''; width:32px; height:1px; background:var(--accent); }
+header h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px,5vw,66px);
+  font-weight: 800; line-height:1; letter-spacing:-1px;
+  background: linear-gradient(120deg, #d8eaf5 0%, #00e5b4 55%, #3db4ff 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.hsub {
+  margin-top:14px; color:var(--muted); font-size:12px;
+  font-family:'JetBrains Mono',monospace; display:flex; gap:24px; flex-wrap:wrap;
+}
+.hsub span { display:flex; align-items:center; gap:6px; }
+.dot { width:6px; height:6px; border-radius:50%; display:inline-block; }
+
+/* ─── SECTION ─── */
+.sec { margin-bottom:64px; }
+.sec-title {
+  font-family:'Syne',sans-serif; font-size:24px; font-weight:700;
+  letter-spacing:-0.5px; margin-bottom:4px; color:var(--text);
+}
+.sec-sub {
+  font-family:'JetBrains Mono',monospace; font-size:10px;
+  color:var(--muted); margin-bottom:24px; letter-spacing:1px;
+}
+
+/* ─── KPI GRID ─── */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:14px; margin-bottom:40px; }
+.kpi-card {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:20px; position:relative; overflow:hidden;
+  transition:transform .2s, border-color .2s;
+}
+.kpi-card:hover { transform:translateY(-3px); border-color:var(--accent); }
+.kpi-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--c1,#00e5b4), var(--c2,#3db4ff));
+}
+.kpi-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; font-family:'JetBrains Mono',monospace; }
+.kpi-val { font-family:'Syne',sans-serif; font-size:36px; font-weight:800; line-height:1; }
+.kpi-val span { font-size:15px; color:var(--muted); font-weight:400; }
+.kpi-delta { margin-top:6px; font-size:11px; font-family:'JetBrains Mono',monospace; }
+.kpi-delta.good { color:var(--green); }
+.kpi-delta.warn { color:var(--gold); }
+.kpi-delta.bad { color:var(--red); }
+.kpi-note { font-size:9px; color:var(--muted); margin-top:4px; }
+
+/* ─── CHART CARDS ─── */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-bottom:18px; }
+.grid-1-2 { display:grid; grid-template-columns:1fr 2fr; gap:18px; margin-bottom:18px; }
+.grid-2-1 { display:grid; grid-template-columns:2fr 1fr; gap:18px; margin-bottom:18px; }
+
+.ccard {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:22px;
+}
+.ctitle {
+  font-family:'Syne',sans-serif; font-size:16px; font-weight:700;
+  margin-bottom:3px; color:var(--text);
+}
+.csrc { font-size:9px; color:var(--muted); font-family:'JetBrains Mono',monospace; margin-bottom:14px; }
+canvas { max-height:260px; }
+
+/* ─── INSIGHT BOX ─── */
+.insight {
+  background: linear-gradient(135deg, rgba(0,229,180,0.05) 0%, rgba(61,180,255,0.04) 100%);
+  border:1px solid rgba(0,229,180,0.18); border-left:3px solid var(--accent);
+  border-radius:12px; padding:18px 22px; margin-top:18px;
+}
+.insight h4 {
+  font-family:'JetBrains Mono',monospace; font-size:9px;
+  letter-spacing:3px; color:var(--accent); text-transform:uppercase; margin-bottom:10px;
+}
+.insight ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+.insight li {
+  font-size:12.5px; color:var(--text);
+  display:flex; gap:10px; align-items:flex-start; line-height:1.6;
+}
+.insight li::before { content:'▸'; color:var(--accent); font-size:11px; flex-shrink:0; margin-top:2px; }
+.insight li b { color:var(--gold); }
+
+/* ─── HEATMAP ─── */
+.hmap {
+  display:grid;
+  grid-template-columns: 150px repeat(6, 1fr);
+  gap:3px; font-size:11px;
+}
+.hm-hdr {
+  background:var(--bg3); border-radius:6px; padding:8px 5px;
+  text-align:center; font-family:'JetBrains Mono',monospace;
+  font-size:9px; color:var(--muted); letter-spacing:1px;
+}
+.hm-lbl {
+  background:var(--bg3); border-radius:6px; padding:10px 12px;
+  display:flex; align-items:center; gap:8px; font-size:12px; font-weight:500;
+}
+.hm-cell {
+  border-radius:6px; padding:10px 5px; text-align:center;
+  font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; min-height:42px;
+  transition:transform .15s; cursor:default;
+}
+.hm-cell:hover { transform:scale(1.1); z-index:2; position:relative; }
+
+/* ─── CASE CARDS ─── */
+.case-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; margin-bottom:18px; }
+.case-card {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:20px; position:relative; overflow:hidden;
+}
+.case-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--cc1,#00e5b4), var(--cc2,#3db4ff));
+}
+.case-country { font-size:9px; font-family:'JetBrains Mono',monospace; letter-spacing:2px; color:var(--muted); margin-bottom:6px; }
+.case-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; margin-bottom:8px; }
+.case-stat {
+  display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;
+}
+.stat-pill {
+  background:rgba(0,229,180,0.08); border:1px solid rgba(0,229,180,0.2);
+  border-radius:20px; padding:3px 10px; font-size:10px;
+  font-family:'JetBrains Mono',monospace; color:var(--accent);
+}
+.stat-pill.gold { background:rgba(240,192,64,0.08); border-color:rgba(240,192,64,0.2); color:var(--gold); }
+.stat-pill.blue { background:rgba(61,180,255,0.08); border-color:rgba(61,180,255,0.2); color:var(--blue); }
+.case-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+
+/* ─── GAP TABLE ─── */
+.gap-table { width:100%; border-collapse:collapse; }
+.gap-table th {
+  font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+  color:var(--muted); text-transform:uppercase; padding:10px 14px; text-align:left;
+  border-bottom:1px solid var(--border);
+}
+.gap-table td { padding:10px 14px; border-bottom:1px solid rgba(22,34,54,0.6); font-size:12px; }
+.gap-table tr:last-child td { border-bottom:none; }
+.badge {
+  display:inline-block; padding:2px 8px; border-radius:20px;
+  font-size:9px; font-family:'JetBrains Mono',monospace; font-weight:700;
+}
+.badge.high { background:rgba(57,217,138,0.12); color:var(--green); }
+.badge.mid { background:rgba(240,192,64,0.12); color:var(--gold); }
+.badge.low { background:rgba(255,79,79,0.12); color:var(--red); }
+
+/* ─── PROGRESS ─── */
+.prog-list { display:flex; flex-direction:column; gap:14px; }
+.prog-item {}
+.prog-row { display:flex; justify-content:space-between; margin-bottom:5px; }
+.prog-name { font-size:12px; font-weight:500; }
+.prog-val { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); }
+.prog-bg { height:7px; border-radius:4px; background:var(--bg3); overflow:hidden; }
+.prog-bar { height:100%; border-radius:4px; }
+
+/* ─── DIVIDER ─── */
+.divider { height:1px; background:var(--border); margin:56px 0; }
+
+/* ─── FOOTER ─── */
+footer { text-align:center; color:var(--muted); font-size:10px; padding:28px 0 10px; border-top:1px solid var(--border); font-family:'JetBrains Mono',monospace; line-height:2; }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px) {
+  .grid2,.grid3,.grid-1-2,.grid-2-1 { grid-template-columns:1fr; }
+  .hmap { grid-template-columns:110px repeat(6,1fr); font-size:9px; }
+}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.sec { animation:fadeUp .5s ease both; }
+.sec:nth-child(2){animation-delay:.08s} .sec:nth-child(3){animation-delay:.14s}
+.sec:nth-child(4){animation-delay:.18s} .sec:nth-child(5){animation-delay:.22s}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="htag">NEV SUSTAINABILITY INTELLIGENCE · 2026</div>
+  <h1>EVs & The Planet<br>Sustainability Impact</h1>
+  <div class="hsub">
+    <span><span class="dot" style="background:var(--accent)"></span> Fuel · Emissions · Coal · Oil · Carbon Footprint</span>
+    <span><span class="dot" style="background:var(--gold)"></span> Comparison: India vs Developed Nations</span>
+    <span><span class="dot" style="background:var(--blue)"></span> Real-World Adoption Lessons</span>
+  </div>
+</header>
+
+<!-- ══ SECTION 1: SUSTAINABILITY KPIs ══ -->
+<div class="sec">
+  <div class="sec-title">01 — Sustainability at a Glance</div>
+  <div class="sec-sub">SOURCE: IEA 2025 · IRENA · UNEP · ICCT · WEF ENERGY TRANSITION REPORT</div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--c1:#00e5b4;--c2:#39d98a">
+      <div class="kpi-label">CO₂ Saved — EVs vs ICE (Lifetime)</div>
+      <div class="kpi-val">50<span>%</span></div>
+      <div class="kpi-delta good">↓ Lower lifecycle emissions</div>
+      <div class="kpi-note">IEA 2025 — even on coal-heavy grids</div>
+    </div>
+    <div class="kpi-card" style="--c1:#3db4ff;--c2:#00e5b4">
+      <div class="kpi-label">Fuel Consumption Reduction</div>
+      <div class="kpi-val">70<span>%</span></div>
+      <div class="kpi-delta good">↓ Energy per km vs petrol</div>
+      <div class="kpi-note">EV: 15–20 kWh/100km vs 7L/100km petrol</div>
+    </div>
+    <div class="kpi-card" style="--c1:#f0c040;--c2:#ff9933">
+      <div class="kpi-label">Global Oil Displaced by EVs (2024)</div>
+      <div class="kpi-val">1.8<span>Mb/d</span></div>
+      <div class="kpi-delta good">↑ Up from 0.7 Mb/d (2021)</div>
+      <div class="kpi-note">IEA Oil 2025 report</div>
+    </div>
+    <div class="kpi-card" style="--c1:#ff4f4f;--c2:#f0c040">
+      <div class="kpi-label">India's Transport CO₂ Share</div>
+      <div class="kpi-val">13<span>%</span></div>
+      <div class="kpi-delta warn">↑ Growing fastest in Asia</div>
+      <div class="kpi-note">Total national GHG emissions, 2024</div>
+    </div>
+    <div class="kpi-card" style="--c1:#39d98a;--c2:#3db4ff">
+      <div class="kpi-label">Norway EV Share — Transport CO₂ Cut</div>
+      <div class="kpi-val">82<span>%</span></div>
+      <div class="kpi-delta good">↓ 35% transport emissions since 2014</div>
+      <div class="kpi-note">Real-world leader since 2013</div>
+    </div>
+    <div class="kpi-card" style="--c1:#c471ed;--c2:#3db4ff">
+      <div class="kpi-label">Coal Grid Penalty — India EVs</div>
+      <div class="kpi-val">+30<span>%</span></div>
+      <div class="kpi-delta warn">⚠ Extra CO₂ vs clean-grid countries</div>
+      <div class="kpi-note">Still 40% better than ICE even so</div>
+    </div>
+    <div class="kpi-card" style="--c1:#00e5b4;--c2:#f0c040">
+      <div class="kpi-label">Carbon Footprint: EV vs ICE (India)</div>
+      <div class="kpi-val">40<span>%</span></div>
+      <div class="kpi-delta good">↓ Lower over 10-yr life cycle</div>
+      <div class="kpi-note">ICCT India LCA 2024</div>
+    </div>
+    <div class="kpi-card" style="--c1:#ff4f4f;--c2:#c471ed">
+      <div class="kpi-label">Pollution — Urban Air (NO₂)</div>
+      <div class="kpi-val">0<span>g/km</span></div>
+      <div class="kpi-delta good">↓ vs 0.12g/km diesel at tailpipe</div>
+      <div class="kpi-note">Zero local tailpipe emissions from EVs</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: ENVIRONMENT IMPACT CHARTS ══ -->
+<div class="sec">
+  <div class="sec-title">02 — Environmental Impact: EVs vs Fossil Fuels</div>
+  <div class="sec-sub">SOURCE: IEA · ICCT · UNEP · BP ENERGY REVIEW 2025</div>
+
+  <div class="grid2">
+    <div class="ccard">
+      <div class="ctitle">Lifecycle CO₂ Emissions (gCO₂/km)</div>
+      <div class="csrc">IEA Global EV Outlook 2025 — varying grid intensities</div>
+      <canvas id="co2Bar"></canvas>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Oil Mining Demand Displaced by EVs (Mb/day)</div>
+      <div class="csrc">IEA Oil 2025 — cumulative oil demand avoided</div>
+      <canvas id="oilLine"></canvas>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="ccard">
+      <div class="ctitle">Fuel Consumption: EV vs ICE vs Hybrid</div>
+      <div class="csrc">ICCT 2024 — energy equivalent per 100km</div>
+      <canvas id="fuelDonut"></canvas>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Coal Power Share in EV Charging (by Country)</div>
+      <div class="csrc">IEA 2025 — how clean is the grid powering EVs?</div>
+      <canvas id="coalBar"></canvas>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Urban Air Pollution Reduction — EV Cities</div>
+      <div class="csrc">WHO / UNEP 2024 — NO₂ & PM2.5 decline in high-EV cities</div>
+      <canvas id="pollutionBar"></canvas>
+    </div>
+  </div>
+
+  <div class="insight">
+    <h4>🌿 Key Environmental Takeaways</h4>
+    <ul>
+      <li><b>Coal grid ≠ no benefit:</b> Even in India (67% coal grid), an EV emits ~40% less CO₂ over its lifetime than a petrol car. In Norway's near-100% hydro grid, this rises to ~80% less.</li>
+      <li><b>Oil displacement is accelerating:</b> EVs globally prevented 1.8 million barrels/day of oil demand in 2024 — equal to Iran's full daily production. This directly shrinks oil drilling and refinery activity.</li>
+      <li><b>Urban pollution benefit is immediate:</b> Shenzhen (100% EV buses since 2017) saw PM2.5 levels drop 20% in bus corridors. Oslo recorded 30% fewer NOₓ readings near roads after 2019 EV tipping point.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ SECTION 3: GLOBAL COMPARISON HEATMAP ══ -->
+<div class="sec">
+  <div class="sec-title">03 — Sustainability Readiness: Global Heatmap</div>
+  <div class="sec-sub">COMPOSITE SCORE — EMISSIONS POLICY · GRID CLEANLINESS · ADOPTION RATE · FOSSIL FUEL REDUCTION · CARBON TARGETS</div>
+
+  <div class="ccard" style="margin-bottom:18px; overflow-x:auto">
+    <div class="ctitle">Sustainability Index by Country (0–10)</div>
+    <div class="csrc">Composite: EV adoption %, grid CO₂ intensity, fuel reduction, carbon policy strength, real-world CO₂ savings</div>
+    <div style="margin-top:18px">
+      <div class="hmap" id="hmapGrid"></div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <h4>🔍 Heatmap Gaps — India vs Leaders</h4>
+    <ul>
+      <li><b>Norway scores 9.5 on adoption</b> because 82% of new cars sold in 2024 were electric — driven by tax exemptions since 1990 and no purchase VAT since 2001. India scores 2.</li>
+      <li><b>Grid cleanliness is India's biggest gap:</b> India's grid emits 720 gCO₂/kWh vs Germany's 380, France's 60 (nuclear), and Norway's 25. Faster renewable build-out directly upgrades the EV sustainability score.</li>
+      <li><b>Carbon policy gap is closeable:</b> India's carbon pricing mechanism is nascent vs the EU's €60+/tCO₂ ETS. Strengthening this single lever could unlock ₹50,000Cr+ in EV investment annually.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══ SECTION 4: REAL-WORLD CASE STUDIES ══ -->
+<div class="sec">
+  <div class="sec-title">04 — Real-World Cases: What Developed Nations Did</div>
+  <div class="sec-sub">LESSONS FROM NORWAY · CHINA · GERMANY · USA · NETHERLANDS — APPLIED TO INDIA'S CONTEXT</div>
+
+  <div class="case-grid">
+    <div class="case-card" style="--cc1:#39d98a;--cc2:#00e5b4">
+      <div class="case-country">🇳🇴 NORWAY — SINCE 1990</div>
+      <div class="case-title">Tax-Free EVs + Hydro Grid = 82% Share</div>
+      <div class="case-stat">
+        <span class="stat-pill">82% EV market share 2024</span>
+        <span class="stat-pill gold">35% transport CO₂ cut</span>
+      </div>
+      <div class="case-desc">No purchase tax, no road tax, free parking & ferries for EVs since 2001. Combined with near-100% renewable grid, every EV bought eliminates ~1.5 tonnes CO₂/year vs petrol. <b>India lesson:</b> Even partial tax relief on 2Ws/3Ws (India's dominant segment) can accelerate mass adoption rapidly.</div>
+    </div>
+
+    <div class="case-card" style="--cc1:#e63946;--cc2:#ff9933">
+      <div class="case-country">🇨🇳 CHINA — SHENZHEN CASE</div>
+      <div class="case-title">100% Electric Bus Fleet — 16,000 Buses</div>
+      <div class="case-stat">
+        <span class="stat-pill">16,000 e-buses by 2017</span>
+        <span class="stat-pill gold">48M litres diesel/year saved</span>
+        <span class="stat-pill blue">PM2.5 ↓ 20% near routes</span>
+      </div>
+      <div class="case-desc">Shenzhen electrified its entire public bus fleet in 4 years. Annual diesel savings: 48 million litres. CO₂ prevented: ~160,000 tonnes/year. <b>India lesson:</b> BEST Mumbai & DTC Delhi have 14,000+ buses — full electrification would cut 200K+ tonnes CO₂/year and visibly cut smog.</div>
+    </div>
+
+    <div class="case-card" style="--cc1:#3db4ff;--cc2:#2ec4b6">
+      <div class="case-country">🇩🇪 GERMANY — AUTOBAHN TO E-HIGHWAY</div>
+      <div class="case-title">E-Highway Freight: Overhead Catenary Trucks</div>
+      <div class="case-stat">
+        <span class="stat-pill">3 pilot corridors live 2024</span>
+        <span class="stat-pill gold">70% fuel saving vs diesel</span>
+      </div>
+      <div class="case-desc">Germany tested electrified motorway stretches where freight trucks draw power like trams. Siemens eHighway reduced diesel by 70% on tested routes. Coal mining impact drops as grid greens. <b>India lesson:</b> NH48 Delhi-Mumbai corridor — electrified freight alone could save 5M tonnes CO₂/year.</div>
+    </div>
+
+    <div class="case-card" style="--cc1:#f0c040;--cc2:#ff6b35">
+      <div class="case-country">🇳🇱 NETHERLANDS — AMSTERDAM</div>
+      <div class="case-title">Zero Emission Zone + EV Logistics</div>
+      <div class="case-stat">
+        <span class="stat-pill">ZEZ enforced from 2025</span>
+        <span class="stat-pill gold">NO₂ ↓ 25% city centre</span>
+        <span class="stat-pill blue">30% less delivery vans</span>
+      </div>
+      <div class="case-desc">Amsterdam banned ICE delivery vehicles from the city centre. Within 2 years, NOₓ dropped 25%, PM2.5 fell measurably. EV cargo bikes handle last-mile. <b>India lesson:</b> Bengaluru & Pune's congested commercial zones are ideal pilots for ZEZ policy — auto-rickshaws are already 30% electric.</div>
+    </div>
+
+    <div class="case-card" style="--cc1:#c471ed;--cc2:#3db4ff">
+      <div class="case-country">🇺🇸 USA — IRA ACT 2022</div>
+      <div class="case-title">$7,500 Tax Credit + Domestic Battery Push</div>
+      <div class="case-stat">
+        <span class="stat-pill">$369B clean energy investment</span>
+        <span class="stat-pill gold">EV sales ↑ 40% post-IRA</span>
+      </div>
+      <div class="case-desc">The Inflation Reduction Act tied EV credits to domestic manufacturing. Result: 20+ new battery factories announced, $52B invested. Oil demand in light vehicles fell 3% in 2024. <b>India lesson:</b> India's FAME-III and PLI need similar domestic content linkage — subsidise the ecosystem, not just the vehicle.</div>
+    </div>
+
+    <div class="case-card" style="--cc1:#39d98a;--cc2:#f0c040">
+      <div class="case-country">🇰🇷 SOUTH KOREA — JEJU ISLAND</div>
+      <div class="case-title">Island-Scale 100% EV Target by 2030</div>
+      <div class="case-stat">
+        <span class="stat-pill">36% EVs on Jeju 2024</span>
+        <span class="stat-pill gold">Fuel import ↓ 28%</span>
+        <span class="stat-pill blue">Wind + EV = grid balance</span>
+      </div>
+      <div class="case-desc">Jeju Island — 700,000 residents — offers ₩5M subsidy per EV, free charging at wind-surplus times. Island fuel imports fell 28%. V2G (vehicle-to-grid) tested at scale. <b>India lesson:</b> Island/state-scale pilots — Lakshadweep, Goa, or Sikkim — could prove the full sustainability model before national rollout.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 5: COMPARISON CHARTS ══ -->
+<div class="sec">
+  <div class="sec-title">05 — India vs World: Sustainability Gaps & Adoption</div>
+  <div class="sec-sub">SOURCE: ICCT · IEA · NITI AAYOG · MNRE · IBEF · UNEP 2025</div>
+
+  <div class="grid2">
+    <div class="ccard">
+      <div class="ctitle">EV Penetration Rate — New Sales 2024 (%)</div>
+      <div class="csrc">IEA / ICCT — % of new vehicle sales that are electric</div>
+      <canvas id="penetrationBar"></canvas>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">Carbon Intensity of EV Charging Grid (gCO₂/kWh)</div>
+      <div class="csrc">IEA 2025 — lower = EVs are cleaner on that grid</div>
+      <canvas id="gridIntensityBar"></canvas>
+    </div>
+  </div>
+
+  <div class="grid-2-1">
+    <div class="ccard">
+      <div class="ctitle">Transport Sector CO₂ Reduction vs 2015 Baseline (%)</div>
+      <div class="csrc">UNEP Emissions Gap Report 2025</div>
+      <canvas id="co2ReductionLine"></canvas>
+    </div>
+    <div class="ccard">
+      <div class="ctitle">India Adoption Gap — Key Metrics</div>
+      <div class="csrc">NITI Aayog · ICCT · IEA 2025</div>
+      <div style="margin-top:16px" class="prog-list" id="gapProgressList"></div>
+    </div>
+  </div>
+
+  <div class="ccard" style="margin-top:18px; overflow-x:auto">
+    <div class="ctitle">Sustainability Gap Table — India vs Best Performers</div>
+    <div class="csrc">Compiled: IEA · ICCT · UNEP · IRENA · WEF 2025</div>
+    <div style="margin-top:14px; overflow-x:auto">
+      <table class="gap-table">
+        <thead>
+          <tr>
+            <th>Sustainability Metric</th>
+            <th>India (2025)</th>
+            <th>Best Performer</th>
+            <th>Gap</th>
+            <th>Lesson for India</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>EV Penetration (new sales)</b></td>
+            <td><span class="badge low">~3%</span></td>
+            <td>🇳🇴 Norway 82%</td>
+            <td style="color:var(--red)">−79 pp</td>
+            <td>Eliminate GST on 2W EVs, extend FAME to rural</td>
+          </tr>
+          <tr>
+            <td><b>Grid CO₂ Intensity</b></td>
+            <td><span class="badge low">720 gCO₂/kWh</span></td>
+            <td>🇫🇷 France 60 g</td>
+            <td style="color:var(--red)">12x cleaner</td>
+            <td>Accelerate RE to 500GW by 2030 — impacts EV CO₂ directly</td>
+          </tr>
+          <tr>
+            <td><b>Fuel Saved (transport sector)</b></td>
+            <td><span class="badge low">~1% of demand</span></td>
+            <td>🇨🇳 China ~8%</td>
+            <td style="color:var(--gold)">8x more to save</td>
+            <td>EV bus fleets in top 10 cities = fastest fuel reduction</td>
+          </tr>
+          <tr>
+            <td><b>Urban Air Quality (PM2.5 trend)</b></td>
+            <td><span class="badge low">Worsening</span></td>
+            <td>🇳🇱 NL −25%</td>
+            <td style="color:var(--red)">Opposite direction</td>
+            <td>ZEZ (Zero Emission Zones) in Delhi NCR, BLR core</td>
+          </tr>
+          <tr>
+            <td><b>Coal in Energy Mix (power)</b></td>
+            <td><span class="badge low">67%</span></td>
+            <td>🇩🇪 Germany 30%</td>
+            <td style="color:var(--gold)">37 pp higher</td>
+            <td>Each 10% coal reduction improves EV carbon score by ~7%</td>
+          </tr>
+          <tr>
+            <td><b>Carbon Tax / Price Signal</b></td>
+            <td><span class="badge low">None explicit</span></td>
+            <td>🇪🇺 EU €65/tCO₂</td>
+            <td style="color:var(--red)">No price signal</td>
+            <td>Perform-Achieve-Trade (PAT) expansion to transport sector</td>
+          </tr>
+          <tr>
+            <td><b>Public Charging Density</b></td>
+            <td><span class="badge low">29K stations</span></td>
+            <td>🇨🇳 China 10M+</td>
+            <td style="color:var(--red)">345x gap</td>
+            <td>BharatCharge: mandate chargers at all govt buildings, highways</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="insight">
+    <h4>📌 Top 5 Things India Can Learn Right Now</h4>
+    <ul>
+      <li><b>Start with fleets, not private cars:</b> China's Shenzhen bus model, Norway's taxi electrification — captive fleets are fastest to convert and deliver the most measurable CO₂ cuts. India's STU buses, e-rickshaws, and delivery vans are the low-hanging fruit.</li>
+      <li><b>Price matters more than awareness:</b> Norway proved that financial incentives (zero tax) outperform campaigns. India's 2W EVs are already near cost parity — removing GST could push 2W EV share from 5% → 20% in 3 years.</li>
+      <li><b>Clean grid multiplies EV benefits exponentially:</b> Every percentage point of coal replaced by solar/wind directly improves the sustainability case for every EV on the road today. France's nuclear + Norway's hydro show the grid is the biggest lever.</li>
+      <li><b>Pilot islands or states first:</b> South Korea's Jeju, Portugal's Madeira — geographic isolation forces the full ecosystem to develop. India can replicate with Lakshadweep, Andaman, or Sikkim as showcase zero-emission territories.</li>
+      <li><b>Ban + build simultaneously:</b> Netherlands banned ICE in city zones while funding charging. India must pair any restrictions with infrastructure — the gap of 29K vs China's 10M+ chargers must be addressed via mandatory installation codes for new buildings.</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Data Sources: IEA Global EV Outlook 2025 · ICCT 2025 · UNEP Emissions Gap Report · IRENA · WEF Energy Transition · NITI Aayog · MNRE · WHO Air Quality Report 2024<br>
+  NEV Sustainability Dashboard · March 2026 · For policy & research reference
+</footer>
+
+</div><!-- /wrap -->
+
+<script>
+// ─── CHART DEFAULTS ──────────────────────────────────────────────────
+Chart.defaults.color = '#5a7a99';
+Chart.defaults.borderColor = 'rgba(22,34,54,0.7)';
+Chart.defaults.font.family = "'JetBrains Mono', monospace";
+Chart.defaults.font.size = 10;
+
+// ─── 1. LIFECYCLE CO₂ BAR ───────────────────────────────────────────
+new Chart(document.getElementById('co2Bar'), {
+  type:'bar',
+  data:{
+    labels:['ICE Petrol','ICE Diesel','HEV','PHEV','EV (India\nCoal Grid)','EV (EU\nAvg Grid)','EV (Norway\nHydro)'],
+    datasets:[{
+      label:'gCO₂/km (lifecycle)',
+      data:[207, 185, 130, 105, 115, 80, 40],
+      backgroundColor:[
+        'rgba(255,79,79,0.75)','rgba(255,79,79,0.55)',
+        'rgba(240,192,64,0.6)','rgba(240,192,64,0.4)',
+        'rgba(255,153,51,0.7)','rgba(0,229,180,0.6)','rgba(57,217,138,0.75)'
+      ],
+      borderRadius:6, borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true, indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},title:{display:true,text:'gCO₂/km',color:'#5a7a99'}},
+      y:{grid:{display:false},ticks:{color:'#7a92b0'}}
+    }
+  }
+});
+
+// ─── 2. OIL DEMAND DISPLACED LINE ───────────────────────────────────
+new Chart(document.getElementById('oilLine'), {
+  type:'line',
+  data:{
+    labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025E','2030F'],
+    datasets:[{
+      label:'Oil Displaced (Mb/day)',
+      data:[0.1,0.15,0.25,0.4,0.55,0.5,0.7,1.0,1.4,1.8,2.2,5.0],
+      borderColor:'#00e5b4', backgroundColor:'rgba(0,229,180,0.08)',
+      borderWidth:2.5, fill:true, tension:0.4, pointRadius:4, pointBackgroundColor:'#00e5b4'
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'}},
+      y:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},title:{display:true,text:'Million barrels/day',color:'#5a7a99'}}
+    }
+  }
+});
+
+// ─── 3. FUEL CONSUMPTION DONUT ───────────────────────────────────────
+new Chart(document.getElementById('fuelDonut'), {
+  type:'doughnut',
+  data:{
+    labels:['ICE Petrol (7L/100km equiv.)','Hybrid (5L equiv.)','PHEV (3L equiv.)','Full EV (1.8L equiv.)'],
+    datasets:[{
+      data:[7,5,3,1.8],
+      backgroundColor:[
+        'rgba(255,79,79,0.75)','rgba(240,192,64,0.65)',
+        'rgba(61,180,255,0.55)','rgba(0,229,180,0.75)'
+      ],
+      borderColor:'#0d1520', borderWidth:3
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true, cutout:'60%',
+    plugins:{legend:{position:'bottom',labels:{padding:8,boxWidth:10,color:'#5a7a99',font:{size:9}}}}
+  }
+});
+
+// ─── 4. COAL SHARE BAR ───────────────────────────────────────────────
+new Chart(document.getElementById('coalBar'), {
+  type:'bar',
+  data:{
+    labels:['India','China','Germany','USA','Japan','EU Avg','France','Norway'],
+    datasets:[{
+      label:'Coal % in grid',
+      data:[67,61,30,22,30,15,5,2],
+      backgroundColor:[
+        'rgba(255,153,51,0.8)','rgba(230,57,70,0.7)',
+        'rgba(46,196,182,0.65)','rgba(58,134,255,0.65)',
+        'rgba(230,57,70,0.5)','rgba(61,180,255,0.6)',
+        'rgba(57,217,138,0.65)','rgba(57,217,138,0.8)'
+      ],
+      borderRadius:6, borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#5a7a99'}},
+      y:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},max:100,title:{display:true,text:'% Coal',color:'#5a7a99'}}
+    }
+  }
+});
+
+// ─── 5. POLLUTION BAR ────────────────────────────────────────────────
+new Chart(document.getElementById('pollutionBar'), {
+  type:'bar',
+  data:{
+    labels:['Shenzhen\n(EV buses)','Oslo\n(82% EV)','Amsterdam\n(ZEZ)','London\n(ULEZ)','Delhi\n(ICE-heavy)'],
+    datasets:[{
+      label:'NOₓ Change vs baseline (%)',
+      data:[-20,-30,-25,-22,+12],
+      backgroundColor:[
+        'rgba(57,217,138,0.7)','rgba(57,217,138,0.75)',
+        'rgba(0,229,180,0.7)','rgba(61,180,255,0.65)','rgba(255,79,79,0.7)'
+      ],
+      borderRadius:6, borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#5a7a99'}},
+      y:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},title:{display:true,text:'NOₓ Change %',color:'#5a7a99'}}
+    }
+  }
+});
+
+// ─── 6. EV PENETRATION BAR ───────────────────────────────────────────
+new Chart(document.getElementById('penetrationBar'), {
+  type:'bar',
+  data:{
+    labels:['Norway','Iceland','Sweden','Netherlands','Germany','China','UK','USA','Japan','India'],
+    datasets:[{
+      label:'EV % of new sales 2024',
+      data:[82,77,55,35,21,47,26,9,4,3],
+      backgroundColor:(ctx)=>{
+        const v = ctx.dataset.data[ctx.dataIndex];
+        if(v>50) return 'rgba(57,217,138,0.8)';
+        if(v>20) return 'rgba(61,180,255,0.7)';
+        if(v>8) return 'rgba(240,192,64,0.7)';
+        return 'rgba(255,153,51,0.8)';
+      },
+      borderRadius:6, borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#5a7a99'}},
+      y:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},title:{display:true,text:'% EV',color:'#5a7a99'}}
+    }
+  }
+});
+
+// ─── 7. GRID INTENSITY BAR ───────────────────────────────────────────
+new Chart(document.getElementById('gridIntensityBar'), {
+  type:'bar',
+  data:{
+    labels:['India','China','Japan','Germany','UK','USA','EU','France','Norway'],
+    datasets:[{
+      label:'gCO₂/kWh',
+      data:[720,530,460,380,250,380,280,60,25],
+      backgroundColor:[
+        'rgba(255,79,79,0.8)','rgba(255,79,79,0.65)','rgba(240,192,64,0.7)',
+        'rgba(61,180,255,0.65)','rgba(61,180,255,0.6)','rgba(61,180,255,0.55)',
+        'rgba(0,229,180,0.6)','rgba(57,217,138,0.75)','rgba(57,217,138,0.85)'
+      ],
+      borderRadius:6, borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{grid:{display:false},ticks:{color:'#5a7a99'}},
+      y:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},title:{display:true,text:'gCO₂/kWh',color:'#5a7a99'}}
+    }
+  }
+});
+
+// ─── 8. CO₂ REDUCTION LINE ───────────────────────────────────────────
+new Chart(document.getElementById('co2ReductionLine'), {
+  type:'line',
+  data:{
+    labels:['2015','2017','2019','2021','2022','2023','2024'],
+    datasets:[
+      {
+        label:'Norway',
+        data:[0,-5,-12,-22,-28,-33,-35],
+        borderColor:'#39d98a', backgroundColor:'transparent',
+        borderWidth:2.5, pointRadius:4, tension:0.4
+      },{
+        label:'China',
+        data:[0,-1,-3,-6,-8,-10,-12],
+        borderColor:'#e63946', backgroundColor:'transparent',
+        borderWidth:2, pointRadius:3, tension:0.4, borderDash:[4,2]
+      },{
+        label:'Germany',
+        data:[0,-3,-5,-10,-13,-16,-18],
+        borderColor:'#3db4ff', backgroundColor:'transparent',
+        borderWidth:2, pointRadius:3, tension:0.4
+      },{
+        label:'India',
+        data:[0,2,5,7,9,11,13],
+        borderColor:'#ff9933', backgroundColor:'transparent',
+        borderWidth:2.5, pointRadius:4, tension:0.4, borderDash:[6,3]
+      }
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:true,
+    plugins:{legend:{labels:{color:'#5a7a99',font:{size:9},boxWidth:20}}},
+    scales:{
+      x:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'}},
+      y:{grid:{color:'rgba(22,34,54,0.7)'},ticks:{color:'#5a7a99'},title:{display:true,text:'% Change vs 2015',color:'#5a7a99'}}
+    }
+  }
+});
+
+// ─── HEATMAP ─────────────────────────────────────────────────────────
+const hmData = {
+  cols: ['EV\nAdoption','Grid\nClean','Fuel\nReduction','CO₂\nPolicy','Air\nQuality','Carbon\nTarget'],
+  rows: [
+    { flag:'🇳🇴', name:'Norway',  s:[9.5,9.8,9,9,9.5,9] },
+    { flag:'🇫🇷', name:'France',  s:[7,9.5,7,8.5,8,9] },
+    { flag:'🇩🇪', name:'Germany', s:[7,7,7.5,9,7.5,8.5] },
+    { flag:'🇨🇳', name:'China',   s:[9,6,8,7.5,6.5,8] },
+    { flag:'🇰🇷', name:'S.Korea', s:[6.5,6,6.5,7,7,7.5] },
+    { flag:'🇺🇸', name:'USA',     s:[5,6.5,6,6,6.5,6] },
+    { flag:'🇮🇳', name:'India',   s:[2,2.5,2,2,2.5,3.5] },
+  ]
+};
+function hmBg(v) {
+  if(v>=9) return '#0e3024'; if(v>=7.5) return '#103520';
+  if(v>=6) return '#1a3d14'; if(v>=5) return '#3d3410';
+  if(v>=3.5) return '#3d2210'; return '#3a1010';
+}
+function hmFg(v) {
+  if(v>=9) return '#39d98a'; if(v>=7.5) return '#6be8a0';
+  if(v>=6) return '#b8e063'; if(v>=5) return '#f5c542';
+  if(v>=3.5) return '#ff8c42'; return '#e63946';
+}
+const hg = document.getElementById('hmapGrid');
+const blank = document.createElement('div'); blank.className='hm-hdr'; blank.textContent='COUNTRY'; hg.appendChild(blank);
+hmData.cols.forEach(h=>{ const d=document.createElement('div'); d.className='hm-hdr'; d.textContent=h; hg.appendChild(d); });
+hmData.rows.forEach(row=>{
+  const lbl=document.createElement('div'); lbl.className='hm-lbl';
+  lbl.innerHTML=`<span style="font-size:16px">${row.flag}</span>${row.name}`; hg.appendChild(lbl);
+  row.s.forEach(s=>{
+    const c=document.createElement('div'); c.className='hm-cell';
+    c.textContent=s.toFixed(1); c.style.background=hmBg(s); c.style.color=hmFg(s);
+    c.title=`Score: ${s}/10`; hg.appendChild(c);
+  });
+});
+
+// ─── GAP PROGRESS BARS ───────────────────────────────────────────────
+const gaps = [
+  { name:'EV Penetration', india:3, best:82, bestLabel:'Norway 82%', color:'#39d98a' },
+  { name:'Grid Cleanliness', india:18, best:98, bestLabel:'Norway 98%RE', color:'#3db4ff' },
+  { name:'Fuel Reduction', india:12, best:90, bestLabel:'Norway 90%', color:'#f0c040' },
+  { name:'Urban Air Quality', india:20, best:88, bestLabel:'NL Amsterdam', color:'#00e5b4' },
+  { name:'Carbon Policy Strength', india:25, best:92, bestLabel:'EU ETS', color:'#c471ed' },
+];
+const pl = document.getElementById('gapProgressList');
+gaps.forEach(g=>{
+  pl.innerHTML+=`
+    <div class="prog-item">
+      <div class="prog-row">
+        <span class="prog-name">${g.name}</span>
+        <span class="prog-val">India ${g.india}% · ${g.bestLabel}</span>
+      </div>
+      <div class="prog-bg" style="position:relative">
+        <div class="prog-bar" style="width:${g.best}%;background:rgba(90,122,153,0.3);position:absolute;left:0;top:0;bottom:0;border-radius:4px"></div>
+        <div class="prog-bar" style="width:${g.india}%;background:${g.color};position:relative;z-index:1"></div>
+      </div>
+    </div>
+  `;
+});
+</script>
+</body>
+</html>

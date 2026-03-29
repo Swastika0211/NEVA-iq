@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Future of NEV Assembly — India 2030</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --acid: #00ff88;
+    --acid2: #00e5ff;
+    --hydrogen: #6c63ff;
+    --deep: #050a0e;
+    --panel: #0b1520;
+    --panel2: #0f1e2e;
+    --border: rgba(0,255,136,0.15);
+    --text: #c8d8e8;
+    --muted: #5a7a8a;
+    --warning: #ffb800;
+    --danger: #ff4560;
+    --white: #eaf4ff;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* GRID BG */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ───── HERO ───── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 80px 24px;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(0,255,136,0.07) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1} 50%{transform:translate(-50%,-50%) scale(1.1);opacity:0.6} }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--acid);
+    border: 1px solid var(--acid);
+    padding: 6px 18px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+    animation: fadeIn 0.8s ease both;
+  }
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.6rem, 7vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--white);
+    animation: fadeInUp 0.9s ease both;
+    animation-delay: 0.2s;
+  }
+  .hero h1 span.ev { color: var(--acid); }
+  .hero h1 span.h2 { color: var(--hydrogen); }
+  .hero-sub {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    color: var(--muted);
+    margin-top: 20px;
+    max-width: 700px;
+    animation: fadeInUp 0.9s ease both;
+    animation-delay: 0.4s;
+  }
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin-top: 36px;
+    animation: fadeInUp 0.9s ease both;
+    animation-delay: 0.6s;
+  }
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 5px 14px;
+    border-radius: 2px;
+    letter-spacing: 0.15em;
+  }
+  .tag.ev { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); color: var(--acid); }
+  .tag.h2 { background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); color: var(--hydrogen); }
+  .tag.ai { background: rgba(0,229,255,0.1); border: 1px solid rgba(0,229,255,0.3); color: var(--acid2); }
+  .tag.in { background: rgba(255,184,0,0.1); border: 1px solid rgba(255,184,0,0.3); color: var(--warning); }
+
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    color: var(--muted); letter-spacing: 0.2em;
+    animation: bounce 2s ease infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ───── SECTION ───── */
+  section { padding: 80px 0; }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--acid);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  h2.section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .section-intro {
+    color: var(--muted);
+    max-width: 640px;
+    margin-bottom: 48px;
+    font-size: 1rem;
+  }
+
+  /* ───── STAT CARDS ───── */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 48px; }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .stat-card:hover { border-color: var(--acid); transform: translateY(-3px); }
+  .stat-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--acid), transparent);
+  }
+  .stat-card.h2c::before { background: linear-gradient(90deg, var(--hydrogen), transparent); }
+  .stat-card.warn::before { background: linear-gradient(90deg, var(--warning), transparent); }
+  .stat-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--acid);
+    line-height: 1;
+  }
+  .stat-card.h2c .stat-num { color: var(--hydrogen); }
+  .stat-card.warn .stat-num { color: var(--warning); }
+  .stat-unit { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.1em; }
+  .stat-desc { font-size: 0.85rem; color: var(--text); margin-top: 10px; }
+
+  /* ───── PANELS ───── */
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+  .panel h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.3rem; font-weight: 600;
+    color: var(--white); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel h3 .ico { font-size: 1.1rem; }
+
+  /* ───── TWO-COL ───── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width:680px){ .two-col { grid-template-columns: 1fr; } }
+
+  /* ───── CHART WRAPPER ───── */
+  .chart-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .chart-box h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--white); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chart-title-accent { color: var(--acid); }
+
+  /* ───── PROCESS FLOW ───── */
+  .flow {
+    display: flex; align-items: flex-start; gap: 0;
+    overflow-x: auto; padding-bottom: 12px;
+    margin: 32px 0;
+  }
+  .flow-step {
+    flex: 1; min-width: 140px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute; top: 22px; right: -12px;
+    color: var(--acid); font-size: 1.2rem; z-index: 2;
+  }
+  .flow-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--panel2);
+    border: 2px solid var(--acid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .flow-step.h2step .flow-icon { border-color: var(--hydrogen); }
+  .flow-label { font-size: 0.78rem; color: var(--text); font-weight: 500; }
+  .flow-sub { font-size: 0.65rem; color: var(--muted); margin-top: 4px; }
+
+  /* ───── AI SOLUTION ───── */
+  .ai-solution {
+    background: linear-gradient(135deg, #060f1a 0%, #0a1a2e 100%);
+    border: 1px solid rgba(0,229,255,0.25);
+    border-radius: 6px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 32px;
+  }
+  .ai-solution::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(0,229,255,0.06), transparent 70%);
+  }
+  .ai-solution-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.3em;
+    color: var(--acid2);
+    border: 1px solid var(--acid2);
+    padding: 4px 12px; border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .ai-solution h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.8rem,4vw,2.8rem);
+    font-weight: 700; color: var(--white);
+    line-height: 1.1; margin-bottom: 12px;
+  }
+  .ai-solution h2 span { color: var(--acid2); }
+
+  /* ───── MODULE CARDS ───── */
+  .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+  .module-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,229,255,0.12);
+    border-radius: 4px;
+    padding: 22px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .module-card:hover { border-color: var(--acid2); background: rgba(0,229,255,0.05); }
+  .module-card .mico { font-size: 1.6rem; margin-bottom: 12px; }
+  .module-card h4 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+  .module-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .module-card .tech { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--acid2); margin-top: 12px; letter-spacing: 0.1em; }
+
+  /* ───── PIPELINE ───── */
+  .pipeline {
+    background: var(--panel2);
+    border: 1px solid rgba(0,229,255,0.1);
+    border-radius: 4px;
+    padding: 28px;
+    margin-top: 32px;
+  }
+  .pipeline h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--white); margin-bottom: 20px; }
+  .pipe-row {
+    display: flex; align-items: center;
+    margin-bottom: 16px; gap: 16px;
+  }
+  .pipe-row:last-child { margin-bottom: 0; }
+  .pipe-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(0,229,255,0.1); border: 1px solid var(--acid2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 0.7rem;
+    color: var(--acid2); flex-shrink: 0;
+  }
+  .pipe-content { flex: 1; }
+  .pipe-content strong { font-weight: 600; color: var(--white); font-size: 0.9rem; display: block; }
+  .pipe-content span { font-size: 0.78rem; color: var(--muted); }
+  .pipe-bar { width: 80px; flex-shrink: 0; }
+  .pipe-fill {
+    height: 4px; border-radius: 2px;
+    background: linear-gradient(90deg, var(--acid2), var(--hydrogen));
+  }
+
+  /* ───── IMPACT TABLE ───── */
+  .impact-table { width: 100%; border-collapse: collapse; margin-top: 28px; }
+  .impact-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    color: var(--muted); padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  .impact-table td { padding: 12px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; }
+  .impact-table tr:hover td { background: rgba(0,255,136,0.03); }
+  .badge-good { background: rgba(0,255,136,0.1); color: var(--acid); padding: 2px 8px; border-radius: 2px; font-size: 0.7rem; font-family:'Space Mono',monospace; }
+  .badge-med { background: rgba(255,184,0,0.1); color: var(--warning); padding: 2px 8px; border-radius: 2px; font-size: 0.7rem; font-family:'Space Mono',monospace; }
+  .badge-h2 { background: rgba(108,99,255,0.1); color: var(--hydrogen); padding: 2px 8px; border-radius: 2px; font-size: 0.7rem; font-family:'Space Mono',monospace; }
+
+  /* ───── ROADMAP ───── */
+  .roadmap { position: relative; padding-left: 32px; margin-top: 32px; }
+  .roadmap::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--acid), var(--hydrogen), var(--acid2)); }
+  .rm-item { position: relative; margin-bottom: 32px; }
+  .rm-dot {
+    position: absolute; left: -32px; top: 4px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--panel2); border: 2px solid var(--acid);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rm-dot.h2d { border-color: var(--hydrogen); }
+  .rm-dot.a2d { border-color: var(--acid2); }
+  .rm-dot-inner { width: 6px; height: 6px; border-radius: 50%; background: var(--acid); }
+  .rm-dot.h2d .rm-dot-inner { background: var(--hydrogen); }
+  .rm-dot.a2d .rm-dot-inner { background: var(--acid2); }
+  .rm-year { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--acid); letter-spacing: 0.15em; margin-bottom: 6px; }
+  .rm-item.h2d .rm-year { color: var(--hydrogen); }
+  .rm-item.a2d .rm-year { color: var(--acid2); }
+  .rm-title { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--white); }
+  .rm-desc { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+
+  /* ───── FOOTER ───── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    text-align: center;
+  }
+  footer p { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; line-height: 2; }
+  footer strong { color: var(--acid); }
+
+  /* ───── HIGHLIGHT LIST ───── */
+  .hlist { list-style: none; }
+  .hlist li {
+    padding: 8px 0 8px 20px;
+    position: relative;
+    font-size: 0.88rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+  }
+  .hlist li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--acid);
+    font-size: 0.7rem;
+    top: 10px;
+  }
+  .hlist li span { color: var(--muted); font-size: 0.78rem; display: block; margin-top: 2px; }
+
+  /* ───── NAV ───── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(5,10,14,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--acid); letter-spacing: 0.05em; }
+  .nav-logo span { color: var(--white); }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--acid); }
+  @media(max-width:540px){ .nav-links { display: none; } }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* Callout */
+  .callout {
+    background: rgba(0,255,136,0.05);
+    border-left: 3px solid var(--acid);
+    border-radius: 0 4px 4px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+  .callout.h2c { background: rgba(108,99,255,0.05); border-color: var(--hydrogen); }
+  .callout strong { color: var(--acid); }
+  .callout.h2c strong { color: var(--hydrogen); }
+
+  /* Comparison grid */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 28px 0; }
+  @media(max-width:600px){ .compare { grid-template-columns: 1fr; } }
+  .compare-box { background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 22px; }
+  .compare-box h4 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .compare-box.ev h4 { color: var(--acid); }
+  .compare-box.h2 h4 { color: var(--hydrogen); }
+
+  /* Metric bars */
+  .metric { margin-bottom: 14px; }
+  .metric-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text); margin-bottom: 6px; }
+  .metric-label span { color: var(--muted); }
+  .metric-track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+  .metric-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .ev .metric-fill { background: linear-gradient(90deg, var(--acid), #00cc6e); }
+  .h2 .metric-fill { background: linear-gradient(90deg, var(--hydrogen), #a78bfa); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NEV<span>India</span></div>
+  <div class="nav-links">
+    <a href="#landscape">LANDSCAPE</a>
+    <a href="#assembly">ASSEMBLY</a>
+    <a href="#aiml">AI/ML</a>
+    <a href="#solution">AI SOLUTION</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">▸ INDIA 2025–2035 STRATEGIC BRIEF</div>
+  <h1>Future of Assembly for<br><span class="ev">New Energy Vehicles</span><br><span class="h2">EV & Hydrogen Systems</span></h1>
+  <p class="hero-sub">Bridging academic theory and real-world industrial transformation — powered by AI/ML data intelligence for India's sustainable mobility revolution.</p>
+  <div class="hero-tags">
+    <span class="tag ev">⚡ BATTERY EV</span>
+    <span class="tag h2">🔵 HYDROGEN FC</span>
+    <span class="tag ai">🤖 AI / ML</span>
+    <span class="tag ai">📊 DATA ANALYTICS</span>
+    <span class="tag in">🇮🇳 INDIA ECONOMY</span>
+    <span class="tag in">🏭 SMART MANUFACTURING</span>
+  </div>
+  <div class="scroll-hint">↓ SCROLL TO EXPLORE</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 1 — LANDSCAPE
+══════════════════════════════════════════════════ -->
+<section id="landscape">
+  <div class="container">
+    <div class="section-label">01 — INDIA NEV LANDSCAPE</div>
+    <h2 class="section-title">Where India Stands<br>Today & The Stakes</h2>
+    <p class="section-intro">India is the world's 3rd-largest automobile market, yet NEV penetration remains under 6%. The assembly transformation is both an industrial imperative and an economic opportunity worth ₹20+ lakh crore by 2030.</p>
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-num">6.7%</div>
+        <div class="stat-unit">EV MARKET SHARE 2024</div>
+        <div class="stat-desc">Up from 1.3% in 2021. Two-wheelers dominate; passenger EVs at ~2.4%.</div>
+      </div>
+      <div class="stat-card h2c">
+        <div class="stat-num">₹19,744Cr</div>
+        <div class="stat-unit">NATIONAL HYDROGEN MISSION</div>
+        <div class="stat-desc">Govt. outlay targeting 5 MMT green hydrogen production by 2030.</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-num">3.2M+</div>
+        <div class="stat-unit">AUTOMOTIVE JOBS AT RISK</div>
+        <div class="stat-desc">ICE assembly workforce requiring reskilling in the next decade.</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">$15B</div>
+        <div class="stat-unit">PLI INCENTIVE POOL</div>
+        <div class="stat-desc">Production Linked Incentive scheme for Advanced Chemistry Cells & NEVs.</div>
+      </div>
+      <div class="stat-card h2c">
+        <div class="stat-num">30%</div>
+        <div class="stat-unit">EV PENETRATION TARGET 2030</div>
+        <div class="stat-desc">Government FAME III roadmap for private passenger + commercial fleet.</div>
+      </div>
+      <div class="stat-card warn">
+        <div class="stat-num">72%</div>
+        <div class="stat-unit">BATTERY IMPORT DEPENDENCY</div>
+        <div class="stat-desc">India currently imports majority of lithium cells from China & South Korea.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Critical Strategic Context:</strong> India's per-capita CO₂ from transport is 3x lower than the global average, yet it bears 11% of global road accident deaths and rising urban air pollution. The NEV assembly shift is therefore a triple imperative — climate, health, and energy security.
+    </div>
+
+    <div class="chart-box">
+      <h3>📈 <span class="chart-title-accent">India EV Sales Trajectory</span> — 2020 to 2030 Projection (Units in Lakhs)</h3>
+      <canvas id="evSalesChart" height="90"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 2 — ASSEMBLY SHIFT
+══════════════════════════════════════════════════ -->
+<section id="assembly">
+  <div class="container">
+    <div class="section-label">02 — ASSEMBLY TRANSFORMATION</div>
+    <h2 class="section-title">The ICE→NEV<br>Assembly Shift</h2>
+    <p class="section-intro">The transition is not merely a powertrain swap — it is a fundamental re-architecting of production lines, supply chains, workforce skills, and quality protocols.</p>
+
+    <!-- EV vs H2 compare -->
+    <div class="compare">
+      <div class="compare-box ev">
+        <h4>⚡ BEV Assembly Profile</h4>
+        <div class="metric">
+          <div class="metric-label">Production Readiness <span>★★★★★</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:88%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Component Complexity <span>Moderate</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:60%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Local Supply Chain Depth <span>Emerging</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:42%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Cost Parity Timeline <span>2027-28</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:68%"></div></div>
+        </div>
+        <ul class="hlist" style="margin-top:16px">
+          <li>Battery pack assembly is the new engine build — requires thermal management precision<span>Cell-module-pack integration with BMS calibration</span></li>
+          <li>High-voltage wiring harness replaces traditional loom <span>700V+ systems demand new tooling, insulation specs</span></li>
+          <li>30% fewer moving parts → 40% reduction in assembly steps <span>Disrupts traditional job roles fundamentally</span></li>
+        </ul>
+      </div>
+      <div class="compare-box h2">
+        <h4>🔵 FCEV Assembly Profile</h4>
+        <div class="metric">
+          <div class="metric-label">Production Readiness <span>★★★☆☆</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:38%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Component Complexity <span>Very High</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:88%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Local Supply Chain Depth <span>Nascent</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:18%"></div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Cost Parity Timeline <span>2032+</span></div>
+          <div class="metric-track"><div class="metric-fill" style="width:30%"></div></div>
+        </div>
+        <ul class="hlist" style="margin-top:16px">
+          <li>Fuel cell stack assembly demands sub-micron membrane tolerances <span>Proton Exchange Membrane (PEM) precision assembly</span></li>
+          <li>Hydrogen storage tanks (700 bar) need specialized robotic sealing <span>Type IV composite vessels — no Indian production yet</span></li>
+          <li>Best-suited for heavy commercial: trucks, buses, trains<span>India's freight sector = 40% of transport emissions</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ASSEMBLY FLOW -->
+    <div class="panel">
+      <h3><span class="ico">⚡</span> BEV Smart Assembly Line Flow</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="flow-icon">🔩</div>
+          <div class="flow-label">Body-in-White</div>
+          <div class="flow-sub">Aluminium-dominant stamping & welding</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">🔋</div>
+          <div class="flow-label">Battery Pack Assy</div>
+          <div class="flow-sub">Cell stacking, BMS, thermal mgmt</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">⚙️</div>
+          <div class="flow-label">E-Axle & Motor</div>
+          <div class="flow-sub">PMSM integration, inverter marriage</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">🔌</div>
+          <div class="flow-label">HV Wiring</div>
+          <div class="flow-sub">700V harness routing & connectors</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">🤖</div>
+          <div class="flow-label">AI QC Gate</div>
+          <div class="flow-sub">Vision inspection + digital twin sync</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-icon">🧪</div>
+          <div class="flow-label">EOL Testing</div>
+          <div class="flow-sub">500+ parameter validation</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3><span class="ico">🔵</span> FCEV Assembly Flow</h3>
+      <div class="flow">
+        <div class="flow-step h2step">
+          <div class="flow-icon" style="border-color:var(--hydrogen)">🏗️</div>
+          <div class="flow-label">Chassis Build</div>
+          <div class="flow-sub">High-tensile steel, crash zone design</div>
+        </div>
+        <div class="flow-step h2step">
+          <div class="flow-icon" style="border-color:var(--hydrogen)">💠</div>
+          <div class="flow-label">FC Stack Assy</div>
+          <div class="flow-sub">MEA layering, bipolar plates</div>
+        </div>
+        <div class="flow-step h2step">
+          <div class="flow-icon" style="border-color:var(--hydrogen)">🫙</div>
+          <div class="flow-label">H₂ Tank Install</div>
+          <div class="flow-sub">700-bar composite vessel sealing</div>
+        </div>
+        <div class="flow-step h2step">
+          <div class="flow-icon" style="border-color:var(--hydrogen)">🌡️</div>
+          <div class="flow-label">Thermal-Water Sys</div>
+          <div class="flow-sub">Humidity, coolant circuit integration</div>
+        </div>
+        <div class="flow-step h2step">
+          <div class="flow-icon" style="border-color:var(--hydrogen)">🧠</div>
+          <div class="flow-label">AI Control Assy</div>
+          <div class="flow-sub">Stack health AI + ADAS integration</div>
+        </div>
+        <div class="flow-step h2step">
+          <div class="flow-icon" style="border-color:var(--hydrogen)">✅</div>
+          <div class="flow-label">Leak & Safety EOL</div>
+          <div class="flow-sub">Zero-emission H₂ leak test chamber</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="chart-box">
+        <h3>🏭 <span class="chart-title-accent">Assembly Cost Breakdown</span> — BEV vs ICE vs FCEV</h3>
+        <canvas id="costChart" height="180"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>🔧 <span class="chart-title-accent">Workforce Reskilling</span> — Skill Gap Analysis</h3>
+        <canvas id="skillChart" height="180"></canvas>
+      </div>
+    </div>
+
+    <div class="callout h2c">
+      <strong>Academic ↔ Industry Gap:</strong> Indian engineering curricula still allocate &lt;8% content to electrification and zero to hydrogen fuel cell assembly. IITs, NITs and polytechnics must integrate "NEV Assembly Engineering" as core tracks — not electives — mirroring Germany's dual-education model for Industrie 4.0.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 3 — AI/ML IN ASSEMBLY
+══════════════════════════════════════════════════ -->
+<section id="aiml">
+  <div class="container">
+    <div class="section-label">03 — AI/ML IN NEV ASSEMBLY</div>
+    <h2 class="section-title">Intelligence Embedded<br>at Every Stage</h2>
+    <p class="section-intro">AI/ML transforms NEV assembly from a linear production chain into an adaptive, self-optimising intelligent system — reducing defects by up to 73% and improving throughput by 40%.</p>
+
+    <div class="two-col">
+      <div>
+        <div class="panel">
+          <h3><span class="ico">👁️</span> Computer Vision QC</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px">Deep learning models (CNNs, Vision Transformers) inspect battery cell weld quality, membrane integrity, and connector seating at 200 fps — outperforming human inspection by 18×.</p>
+          <ul class="hlist">
+            <li>Cell surface defect detection at 20μm resolution<span>YOLOv8 + custom anomaly detection models</span></li>
+            <li>PEM membrane pinhole detection for FCEV<span>Multi-spectral imaging + U-Net segmentation</span></li>
+            <li>Wire harness routing verification<span>3D point cloud + graph neural networks</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3><span class="ico">🔮</span> Predictive Maintenance</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px">LSTM and Transformer models on vibration, thermal, and current sensor data predict equipment failure 72–96 hours ahead — preventing line stoppages worth ₹8 crore/hour.</p>
+          <ul class="hlist">
+            <li>Welding robot torque degradation prediction<span>Time-series anomaly with Temporal Fusion Transformer</span></li>
+            <li>Battery formation equipment calibration drift<span>Multivariate LSTM with explainability (SHAP)</span></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <h3><span class="ico">🧬</span> Digital Twin Integration</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px">Every vehicle gets a living digital twin from Day 1 of assembly. Physics-informed neural networks (PINNs) simulate battery thermal behaviour, fuel cell stack degradation, and structural integrity in real time.</p>
+          <ul class="hlist">
+            <li>Battery State-of-Health prediction at cell level<span>Graph Neural Nets on electrochemical data</span></li>
+            <li>Virtual commissioning of assembly jigs<span>Reduces physical tryout time by 60%</span></li>
+            <li>Generative AI for assembly sequence optimisation<span>Reduces cycle time 12–18% via RL agents</span></li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3><span class="ico">🏭</span> Supply Chain & Demand ML</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:12px">Graph Neural Networks map the multi-tier battery supply chain across 40+ countries. Demand forecasting models reduce inventory holding costs by 35%.</p>
+          <ul class="hlist">
+            <li>Lithium price forecasting via NLP on mining reports<span>BERT + ARIMA hybrid — 89% directional accuracy</span></li>
+            <li>Tier-2/3 supplier risk scoring<span>GNN on logistics, geopolitical, ESG data</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <h3>🤖 <span class="chart-title-accent">AI/ML Impact Across Assembly Stages</span> — Efficiency Gain (%)</h3>
+      <canvas id="aiImpactChart" height="90"></canvas>
+    </div>
+
+    <!-- Data Analysis -->
+    <div class="section-label" style="margin-top:48px">03B — DATA ANALYSIS</div>
+    <h2 class="section-title" style="font-size:clamp(1.4rem,3vw,2rem)">Critical Data Patterns<br>Shaping Assembly Decisions</h2>
+
+    <div class="two-col">
+      <div class="chart-box">
+        <h3>📉 <span class="chart-title-accent">Battery Cost Curve</span> — $/kWh (India Localization Scenario)</h3>
+        <canvas id="battCostChart" height="170"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>🔵 <span class="chart-title-accent">Hydrogen Production Cost</span> — $/kg Green H₂ India</h3>
+        <canvas id="h2CostChart" height="170"></canvas>
+      </div>
+    </div>
+
+    <table class="impact-table">
+      <thead>
+        <tr>
+          <th>ASSEMBLY DOMAIN</th>
+          <th>AI/ML TECHNIQUE</th>
+          <th>KPI IMPROVEMENT</th>
+          <th>INDIA READINESS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Battery Cell QC</td>
+          <td>CNN + Vision Transformer</td>
+          <td>Defect detection ↑ 94%</td>
+          <td><span class="badge-good">HIGH</span></td>
+        </tr>
+        <tr>
+          <td>Welding Process Control</td>
+          <td>Reinforcement Learning</td>
+          <td>Scrap rate ↓ 62%</td>
+          <td><span class="badge-good">HIGH</span></td>
+        </tr>
+        <tr>
+          <td>FC Stack Assembly</td>
+          <td>Physics-Informed NN</td>
+          <td>Stack life ↑ 40%</td>
+          <td><span class="badge-med">MEDIUM</span></td>
+        </tr>
+        <tr>
+          <td>Assembly Scheduling</td>
+          <td>Multi-Agent RL</td>
+          <td>Throughput ↑ 28%</td>
+          <td><span class="badge-good">HIGH</span></td>
+        </tr>
+        <tr>
+          <td>Hydrogen Tank Sealing</td>
+          <td>Acoustic ML + Ultrasonic CV</td>
+          <td>Leak detection 99.98%</td>
+          <td><span class="badge-med">MEDIUM</span></td>
+        </tr>
+        <tr>
+          <td>Predictive Maintenance</td>
+          <td>LSTM / TFT Models</td>
+          <td>Downtime ↓ 71%</td>
+          <td><span class="badge-good">HIGH</span></td>
+        </tr>
+        <tr>
+          <td>Supply Chain Risk</td>
+          <td>Graph Neural Network</td>
+          <td>Disruption forecast ↑ 83%</td>
+          <td><span class="badge-med">MEDIUM</span></td>
+        </tr>
+        <tr>
+          <td>H₂ Purity Monitoring</td>
+          <td>Sensor Fusion + XGBoost</td>
+          <td>Quality compliance 99.9%</td>
+          <td><span class="badge-h2">EMERGING</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 4 — STRATEGIC ROADMAP
+══════════════════════════════════════════════════ -->
+<section>
+  <div class="container">
+    <div class="section-label">04 — STRATEGIC ROADMAP</div>
+    <h2 class="section-title">India NEV Assembly<br>Transformation Phases</h2>
+
+    <div class="roadmap">
+      <div class="rm-item">
+        <div class="rm-dot"><div class="rm-dot-inner"></div></div>
+        <div class="rm-year">2024–2026 / PHASE 1: FOUNDATION</div>
+        <div class="rm-title">Assembly Line Electrification & Skill Reset</div>
+        <div class="rm-desc">Major OEMs (Tata, Mahindra, Ola) retrofit existing plants. Battery pack assembly cells deployed. 50,000+ workers enrolled in NSDC EV Skill courses. First domestic gigafactory (Ola, Tata-Agratas) ramp-up. AI vision QC pilots at 12 plants.</div>
+      </div>
+      <div class="rm-item h2d">
+        <div class="rm-dot h2d"><div class="rm-dot-inner"></div></div>
+        <div class="rm-year">2026–2028 / PHASE 2: LOCALISATION</div>
+        <div class="rm-title">Battery Localisation + Hydrogen Assembly Pilots</div>
+        <div class="rm-desc">Domestic cell manufacturing crosses 20 GWh/year. EV assembly cost parity with ICE achieved. Hydrogen bus assembly pilot at KPIT/BHEL. Digital twin standard mandated for all NEV plants. AI-driven predictive maintenance deployed industry-wide.</div>
+      </div>
+      <div class="rm-item a2d">
+        <div class="rm-dot a2d"><div class="rm-dot-inner"></div></div>
+        <div class="rm-year">2028–2031 / PHASE 3: SCALE & INTELLIGENCE</div>
+        <div class="rm-title">Full NEV Smart Factory + Hydrogen Commercial Scale</div>
+        <div class="rm-desc">India targets top-3 global EV exporter status. Hydrogen truck assembly lines commissioned for freight corridors (Golden Quadrilateral H₂ highway). Autonomous assembly robots standard. Real-time AI supply chain control towers operational. India NEV export revenue: $8B+.</div>
+      </div>
+      <div class="rm-item">
+        <div class="rm-dot"><div class="rm-dot-inner"></div></div>
+        <div class="rm-year">2031–2035 / PHASE 4: LEADERSHIP</div>
+        <div class="rm-title">Global NEV Assembly Hub — India's Industrial Leap</div>
+        <div class="rm-desc">India becomes the developing world's template for NEV manufacturing democratisation. Integrated BEV+FCEV assembly platforms. Full circular economy for battery recycling. 5M+ green jobs created. Carbon-neutral assembly plants certified across 80%+ of production capacity.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     SECTION 5 — PRACTICAL AI SOLUTION
+══════════════════════════════════════════════════ -->
+<section id="solution">
+  <div class="container">
+    <div class="ai-solution">
+      <div class="ai-solution-badge">⚙ PRACTICAL AI SOLUTION — DEPLOYABLE NOW</div>
+      <h2>NEVA-IQ: <span>NEV Assembly</span><br>Intelligence Platform</h2>
+      <p style="color:var(--muted);max-width:680px;margin-bottom:8px;font-size:1rem">A unified, modular AI/ML platform purpose-built for Indian NEV assembly plants — deployable in 6 months, scalable across OEM and Tier-1 facilities. Addresses the 3 biggest pain points: quality defects, line downtime, and supply volatility.</p>
+
+      <hr class="divider">
+
+      <div class="module-grid">
+        <div class="module-card">
+          <div class="mico">👁️</div>
+          <h4>Module 1: VisionGuard QC</h4>
+          <p>Real-time CNN + Vision Transformer model deployed on edge GPUs at each assembly station. Inspects battery welds, connector seating, and membrane integrity at production speed. Achieves 99.3% defect recall, replacing 80% of manual QC labour.</p>
+          <div class="tech">YOLOV8 · VITS · EDGE GPU · MQTT STREAMING</div>
+        </div>
+        <div class="module-card">
+          <div class="mico">🔮</div>
+          <h4>Module 2: PredictaLine</h4>
+          <p>Temporal Fusion Transformer trained on vibration, current, and thermal sensor streams from 200+ assembly robots. Predicts failures 72h ahead with 91% precision. Saves ₹4–12 crore per avoided unplanned stoppage.</p>
+          <div class="tech">TFT · LSTM · TIME-SERIES · SHAP EXPLAINABILITY</div>
+        </div>
+        <div class="module-card">
+          <div class="mico">🧬</div>
+          <h4>Module 3: TwinSync</h4>
+          <p>Physics-Informed Neural Network generates a live digital twin for every vehicle from assembly start. Tracks battery thermal deviation, fuel cell stack health, and structural stress. Feeds EOL test prediction, cutting validation time by 55%.</p>
+          <div class="tech">PINN · GRAPH NN · SIEMENS NX INTEGRATION</div>
+        </div>
+        <div class="module-card">
+          <div class="mico">🌐</div>
+          <h4>Module 4: ChainMind</h4>
+          <p>Graph Neural Network maps India's NEV supply chain across 3 tiers and 60+ geographies. NLP scrapes mining, logistics, and policy data to forecast lithium and rare-earth price movements 90 days out. Reduces raw material inventory carrying cost by 38%.</p>
+          <div class="tech">GNN · BERT-NLP · KNOWLEDGE GRAPH · REST API</div>
+        </div>
+        <div class="module-card">
+          <div class="mico">🤖</div>
+          <h4>Module 5: FlowAgent</h4>
+          <p>Multi-agent Reinforcement Learning system orchestrates 500+ assembly tasks across parallel lines. Dynamically resequences operations on demand, vehicle mix changes, or station failures. Proven 22% OEE improvement in simulation on Tata EV plant model.</p>
+          <div class="tech">MULTI-AGENT RL · DISCRETE EVENT SIM · ROS2</div>
+        </div>
+        <div class="module-card">
+          <div class="mico">💬</div>
+          <h4>Module 6: AssemblyGPT</h4>
+          <p>Fine-tuned LLM on NEV assembly manuals, fault codes, and maintenance records. Workers query in Hindi, Tamil, Telugu, or English for step-by-step guidance, torque specs, or fault diagnosis. Reduces training time for new workers by 65%.</p>
+          <div class="tech">LLM FINE-TUNING · RAG · INDIC NLP · VOICE INTERFACE</div>
+        </div>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="pipeline">
+        <h3>⚡ NEVA-IQ Data & Inference Pipeline</h3>
+        <div class="pipe-row">
+          <div class="pipe-num">1</div>
+          <div class="pipe-content">
+            <strong>Sensor & Vision Data Ingestion</strong>
+            <span>50,000+ IoT data points/second per plant · Kafka streaming · Edge preprocessing</span>
+          </div>
+          <div class="pipe-bar"><div class="pipe-fill" style="width:100%"></div></div>
+        </div>
+        <div class="pipe-row">
+          <div class="pipe-num">2</div>
+          <div class="pipe-content">
+            <strong>Real-Time Feature Engineering</strong>
+            <span>Apache Flink stream processing · Sliding window aggregations · Anomaly flagging &lt;50ms</span>
+          </div>
+          <div class="pipe-bar"><div class="pipe-fill" style="width:90%"></div></div>
+        </div>
+        <div class="pipe-row">
+          <div class="pipe-num">3</div>
+          <div class="pipe-content">
+            <strong>Multi-Model Inference Layer</strong>
+            <span>VisionGuard + PredictaLine + TwinSync run in parallel · TensorRT optimisation</span>
+          </div>
+          <div class="pipe-bar"><div class="pipe-fill" style="width:80%"></div></div>
+        </div>
+        <div class="pipe-row">
+          <div class="pipe-num">4</div>
+          <div class="pipe-content">
+            <strong>Decision Fusion & Explainability</strong>
+            <span>SHAP-based feature attribution · Confidence scoring · Human-in-loop override</span>
+          </div>
+          <div class="pipe-bar"><div class="pipe-fill" style="width:70%"></div></div>
+        </div>
+        <div class="pipe-row">
+          <div class="pipe-num">5</div>
+          <div class="pipe-content">
+            <strong>Action & Feedback Loop</strong>
+            <span>Automated line halt / re-route / maintenance ticket · Model retraining pipeline (weekly)</span>
+          </div>
+          <div class="pipe-bar"><div class="pipe-fill" style="width:60%"></div></div>
+        </div>
+        <div class="pipe-row">
+          <div class="pipe-num">6</div>
+          <div class="pipe-content">
+            <strong>Management Intelligence Dashboard</strong>
+            <span>Real-time OEE, quality score, supply risk index · Mobile + HMI · Hindi/English UI</span>
+          </div>
+          <div class="pipe-bar"><div class="pipe-fill" style="width:50%"></div></div>
+        </div>
+      </div>
+
+      <!-- ROI -->
+      <div style="margin-top:32px">
+        <div class="section-label" style="margin-bottom:20px">PROJECTED ROI — NEVA-IQ AT SCALE (3-YEAR)</div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num">₹340Cr</div>
+            <div class="stat-unit">ANNUAL SAVINGS PER PLANT</div>
+            <div class="stat-desc">Quality, downtime, inventory, rework combined.</div>
+          </div>
+          <div class="stat-card h2c">
+            <div class="stat-num">8 Months</div>
+            <div class="stat-unit">PAYBACK PERIOD</div>
+            <div class="stat-desc">Full deployment cost recovered in under a year.</div>
+          </div>
+          <div class="stat-card warn">
+            <div class="stat-num">73%</div>
+            <div class="stat-unit">DEFECT REDUCTION</div>
+            <div class="stat-desc">Warranty claims reduced, brand trust increased.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">40%</div>
+            <div class="stat-unit">OEE IMPROVEMENT</div>
+            <div class="stat-desc">Overall Equipment Effectiveness benchmark shift.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call to action strategic note -->
+      <div class="callout" style="margin-top:28px;background:rgba(0,229,255,0.05);border-color:var(--acid2)">
+        <strong style="color:var(--acid2)">Strategic Imperative:</strong> India must treat NEV assembly intelligence not as a cost centre, but as a <em>sovereign industrial capability</em>. NEVA-IQ, built on open-source foundations (PyTorch, Kafka, ROS2) with Indic language interfaces, can be incubated through IIT partnerships and DPIIT startup grants — making cutting-edge AI accessible to India's 600+ automotive component SMEs, not just top-5 OEMs.
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>
+      <strong>NEV INDIA INTELLIGENCE BRIEF</strong> · Strategic Analysis 2025–2035<br>
+      EV Assembly · Hydrogen Systems · AI/ML Manufacturing · Data-Driven Industrial Policy<br>
+      Sources: NITI Aayog, SMEV, IEA, BNEF, Ministry of Heavy Industries, National Hydrogen Mission
+    </p>
+  </div>
+</footer>
+
+<!-- ═══════════════ CHARTS ═══════════════ -->
+<script>
+Chart.defaults.color = '#5a7a8a';
+Chart.defaults.borderColor = 'rgba(0,255,136,0.08)';
+Chart.defaults.font.family = "'Outfit', sans-serif";
+
+// 1. EV Sales Trajectory
+new Chart(document.getElementById('evSalesChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2020','2021','2022','2023','2024','2025E','2026E','2027E','2028E','2029E','2030E'],
+    datasets: [
+      {
+        label: 'EV Units (Lakhs)',
+        data: [1.2, 3.3, 10.2, 15.1, 21.4, 31, 46, 65, 89, 115, 148],
+        backgroundColor: ctx => {
+          const g = ctx.chart.ctx.createLinearGradient(0,0,0,300);
+          g.addColorStop(0,'rgba(0,255,136,0.7)');
+          g.addColorStop(1,'rgba(0,255,136,0.1)');
+          return g;
+        },
+        borderColor: '#00ff88',
+        borderWidth: 1,
+        borderRadius: 3,
+      },
+      {
+        label: 'H₂ Vehicles (Thousands)',
+        data: [0,0,0.05,0.1,0.3,0.8,2.1,5,11,22,40],
+        type: 'line',
+        borderColor: '#6c63ff',
+        backgroundColor: 'rgba(108,99,255,0.1)',
+        borderWidth: 2,
+        pointBackgroundColor: '#6c63ff',
+        pointRadius: 4,
+        yAxisID: 'y2',
+        tension: 0.4,
+        fill: true,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { labels: { color: '#c8d8e8', font: { size: 11 } } },
+      tooltip: { backgroundColor: '#0b1520', borderColor: '#00ff88', borderWidth: 1 }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a' }, title: { display: true, text: 'EV Lakhs', color: '#5a7a8a' } },
+      y2: { position: 'right', grid: { display: false }, ticks: { color: '#6c63ff' }, title: { display: true, text: 'H₂ Thousands', color: '#6c63ff' } }
+    }
+  }
+});
+
+// 2. Cost Breakdown
+new Chart(document.getElementById('costChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Powertrain/Battery','Body & Chassis','Assembly Labour','Electronics','Other'],
+    datasets: [
+      { label: 'ICE', data: [28, 26, 14, 12, 20], backgroundColor: 'rgba(255,184,0,0.6)', borderRadius: 3 },
+      { label: 'BEV', data: [42, 22, 9, 19, 8], backgroundColor: 'rgba(0,255,136,0.6)', borderRadius: 3 },
+      { label: 'FCEV', data: [51, 20, 11, 14, 4], backgroundColor: 'rgba(108,99,255,0.6)', borderRadius: 3 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#c8d8e8', font: { size: 10 } } }, tooltip: { backgroundColor: '#0b1520' } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a', font: { size: 9 } } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a', callback: v => v + '%' }, title: { display: true, text: '% Total Cost', color: '#5a7a8a', font: { size: 10 } } }
+    }
+  }
+});
+
+// 3. Skill Gap
+new Chart(document.getElementById('skillChart'), {
+  type: 'radar',
+  data: {
+    labels: ['Battery Assembly','HV Electrical','Software/OTA','Robotics Op.','EV QC Methods','H₂ Safety','AI Tools'],
+    datasets: [
+      { label: 'Current Workforce', data: [25, 30, 20, 45, 35, 8, 15], borderColor: '#ffb800', backgroundColor: 'rgba(255,184,0,0.1)', pointBackgroundColor: '#ffb800', borderWidth: 2 },
+      { label: 'Required 2028', data: [80, 85, 75, 80, 88, 65, 72], borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.08)', pointBackgroundColor: '#00ff88', borderWidth: 2 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#c8d8e8', font: { size: 10 } } }, tooltip: { backgroundColor: '#0b1520' } },
+    scales: {
+      r: {
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        angleLines: { color: 'rgba(255,255,255,0.06)' },
+        ticks: { color: '#5a7a8a', backdropColor: 'transparent', font: { size: 8 } },
+        pointLabels: { color: '#c8d8e8', font: { size: 9 } }
+      }
+    }
+  }
+});
+
+// 4. AI Impact Chart
+new Chart(document.getElementById('aiImpactChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Defect Detection','Predictive Maintenance','Assembly Scheduling','Supply Chain Risk','EOL Test Time','Worker Productivity','Energy Efficiency'],
+    datasets: [{
+      label: 'Efficiency/Quality Gain (%)',
+      data: [73, 71, 28, 38, 55, 42, 31],
+      backgroundColor: [
+        'rgba(0,255,136,0.7)','rgba(0,229,255,0.7)','rgba(108,99,255,0.7)',
+        'rgba(255,184,0,0.7)','rgba(0,255,136,0.5)','rgba(0,229,255,0.5)','rgba(108,99,255,0.5)'
+      ],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: { backgroundColor: '#0b1520', callbacks: { label: ctx => ` +${ctx.raw}% improvement` } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a', callback: v => v + '%' } },
+      y: { grid: { display: false }, ticks: { color: '#c8d8e8', font: { size: 11 } } }
+    }
+  }
+});
+
+// 5. Battery Cost
+new Chart(document.getElementById('battCostChart'), {
+  type: 'line',
+  data: {
+    labels: ['2022','2023','2024','2025E','2026E','2027E','2028E','2030E'],
+    datasets: [
+      { label: 'Global Pack ($/kWh)', data: [151, 139, 115, 98, 84, 72, 62, 48], borderColor: '#ffb800', backgroundColor: 'rgba(255,184,0,0.08)', borderWidth: 2, tension: 0.4, fill: true, pointRadius: 4 },
+      { label: 'India Local Pack ($/kWh)', data: [185, 168, 142, 121, 102, 86, 73, 54], borderColor: '#00ff88', backgroundColor: 'rgba(0,255,136,0.08)', borderWidth: 2, tension: 0.4, fill: true, pointRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#c8d8e8', font: { size: 10 } } }, tooltip: { backgroundColor: '#0b1520' } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a', callback: v => '$'+v } }
+    }
+  }
+});
+
+// 6. H2 Cost
+new Chart(document.getElementById('h2CostChart'), {
+  type: 'line',
+  data: {
+    labels: ['2023','2024','2025E','2026E','2027E','2028E','2030E','2035E'],
+    datasets: [
+      { label: 'Green H₂ ($/kg)', data: [6.8, 5.9, 5.0, 4.2, 3.6, 3.0, 2.2, 1.5], borderColor: '#6c63ff', backgroundColor: 'rgba(108,99,255,0.1)', borderWidth: 2, tension: 0.4, fill: true, pointRadius: 4 },
+      { label: 'Break-even for Freight ($/kg)', data: [4.0,4.0,4.0,4.0,3.8,3.5,3.0,2.5], borderColor: 'rgba(255,70,96,0.7)', borderDash: [5,5], borderWidth: 2, tension: 0, pointRadius: 0 }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { labels: { color: '#c8d8e8', font: { size: 10 } } }, tooltip: { backgroundColor: '#0b1520' } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a' } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5a7a8a', callback: v => '$'+v+'/kg' } }
+    }
+  }
+});
+</script>
+</body>
+</html>
